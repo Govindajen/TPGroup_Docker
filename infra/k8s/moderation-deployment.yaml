@@ -15,7 +15,6 @@ spec:
       containers:
         - name: moderation
           image: govindrajen/moderation
-          imagePullPolicy: Never
           ports:
             - containerPort: 4003
 --- 
