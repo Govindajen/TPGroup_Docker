@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/add-header: "Access-Control-Allow-Origin: *"
+    nginx.ingress.kubernetes.io/add-header: "Access-Control-Allow-Methods: GET, POST, PUT, DELETE"
+    nginx.ingress.kubernetes.io/add-header: "Access-Control-Allow-Headers: Content-Type"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: client-srv
+            port:
+              number: 3000
+      - path: /posts/create
+        pathType: Exact
+        backend:
+          service:
+            name: posts-clusterip-srv
+            port:
+              number: 4000
+      - path: /posts
+        pathType: Prefix
+        backend:
+          service:
+            name: query-srv
+            port:
+              number: 4002
+      - path: /posts/(.*)/comments
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: comments-srv
+            port:
+              number: 4001
